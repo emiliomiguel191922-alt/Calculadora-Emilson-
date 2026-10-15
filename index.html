@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Retro</title>
+    <style>
+        body {
+            background-color: #2b2b2b;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .calculator {
+            background-color: #c0b9a8;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5), inset 0 2px 5px rgba(255,255,255,0.5);
+            border: 4px solid #8c8574;
+            width: 260px;
+        }
+        .brand {
+            font-size: 12px;
+            font-weight: bold;
+            color: #4a453b;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+        .screen {
+            background-color: #9ead8f;
+            border: inset 3px #65715a;
+            padding: 10px;
+            font-size: 24px;
+            text-align: right;
+            color: #1a2214;
+            margin-bottom: 20px;
+            height: 40px;
+            line-height: 40px;
+            overflow: hidden;
+            letter-spacing: 2px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        button {
+            background-color: #e3dec9;
+            border: 2px solid;
+            border-color: #fff #8c8574 #8c8574 #fff;
+            padding: 15px 0;
+            font-size: 18px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            cursor: pointer;
+            color: #333;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: all 0.1s ease;
+        }
+        button:active {
+            border-color: #8c8574 #fff #fff #8c8574;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+            transform: translateY(2px);
+        }
+        button.operator {
+            background-color: #d1a153;
+            color: #fff;
+            border-color: #f4d09c #8a6428 #8a6428 #f4d09c;
+        }
+        button.clear {
+            background-color: #a85353;
+            color: #fff;
+            border-color: #e08b8b #6b2d2d #6b2d2d #e08b8b;
+        }
+        button.equal {
+            background-color: #5382a8;
+            color: #fff;
+            border-color: #93b9d6 #2d516b #2d516b #93b9d6;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator">
+        <div class="brand">RETRO-80</div>
+        <div id="screen" class="screen">0</div>
+        <div class="buttons">
+            <button class="clear" onclick="clearScreen()">AC</button>
+            <button class="operator" onclick="appendValue('/')">÷</button>
+            <button class="operator" onclick="appendValue('*')">×</button>
+            <button class="operator" onclick="backspace()">⌫</button>
+            
+            <button onclick="appendValue('7')">7</button>
+            <button onclick="appendValue('8')">8</button>
+            <button onclick="appendValue('9')">9</button>
+            <button class="operator" onclick="appendValue('-')">-</button>
+            
+            <button onclick="appendValue('4')">4</button>
+            <button onclick="appendValue('5')">5</button>
+            <button onclick="appendValue('6')">6</button>
+            <button class="operator" onclick="appendValue('+')">+</button>
+            
+            <button onclick="appendValue('1')">1</button>
+            <button onclick="appendValue('2')">2</button>
+            <button onclick="appendValue('3')">3</button>
+            <button class="equal" onclick="calculate()" style="grid-row: span 2; height: 100%;">=</button>
+            
+            <button onclick="appendValue('0')" style="grid-column: span 2;">0</button>
+            <button onclick="appendValue('.')">.</button>
+        </div>
+    </div>
+
+    <script>
+        const screen = document.getElementById('screen');
+        let currentInput = '0';
+        let resetScreen = false;
+
+        function updateScreen() {
+            screen.textContent = currentInput;
+        }
+
+        function appendValue(value) {
+            if (currentInput === '0' || resetScreen) {
+                currentInput = value;
+                resetScreen = false;
+            } else {
+                currentInput += value;
+            }
+            updateScreen();
+        }
+
+        function clearScreen() {
+            currentInput = '0';
+            updateScreen();
+        }
+
+        function backspace() {
+            if (currentInput.length > 1) {
+                currentInput = currentInput.slice(0, -1);
+            } else {
+                currentInput = '0';
+            }
+            updateScreen();
+        }
+
+        function calculate() {
+            try {
+                let expression = currentInput.replace(/×/g, '*').replace(/÷/g, '/');
+                let result = eval(expression);
+                currentInput = String(result);
+                resetScreen = true;
+                updateScreen();
+            } catch (error) {
+                currentInput = 'Erro';
+                resetScreen = true;
+                updateScreen();
+            }
+        }
+    </script>
+
+</body>
+</html>
